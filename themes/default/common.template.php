@@ -53,12 +53,6 @@ function theme_header($data) {
 	media="screen,projection,tv"
 />
 
-
-<script
-	type="text/javascript"
-	src="/core/ckeditor/ckeditor_basic.js"
-></script>
-
 <title>
 	',(
 		empty($data->output['pageTitle']) ?
