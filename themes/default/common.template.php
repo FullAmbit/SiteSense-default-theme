@@ -30,8 +30,7 @@ function theme_metaList($metaList) {
 		}
 		echo "\n/>";
 	}
-} // theme_metaList
-
+}
 function theme_header($data) {
 
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -130,7 +129,6 @@ function theme_header($data) {
 					$children[$i] = $menuList[$i];
 				}
 			}
-			//var_dump($children);
 			if(count($children) > 0)
 			{
 				echo '<ul>';
@@ -151,10 +149,7 @@ function theme_header($data) {
 	<div id="mainWrapper">
 		<div id="contentWrapper"><div id="content">
 ';
-
-} // theme_header
-
-
+}
 function theme_contentBoxHeader($heading,$headingURL='',$date=0) {
 	echo '
 					<div class="contentBox">
@@ -172,8 +167,7 @@ function theme_contentBoxHeader($heading,$headingURL='',$date=0) {
 						<div class="innerBox">
 
 ';
-} // theme_contentBoxHeader
-
+}
 function theme_blogContentBoxHeader($heading,$headingURL='',$date=0,$headingLevel=2) {
 	echo '
 					<div class="contentBox blogBox">
@@ -194,17 +188,14 @@ function theme_blogContentBoxHeader($heading,$headingURL='',$date=0,$headingLeve
 						<div class="innerBox">
 
 ';
-} // theme_blogContentBoxHeader
-
+}
 function theme_contentBoxFooter() {
 	echo '
 
 						<!-- .innerBox --></div>
 					<!-- .contentBox --></div>
 ';
-} // them_contentBoxFooter()
-
-
+}
 function theme_sidebarBoxHeader($heading,$headingURL='') {
 	echo '
 			<div class="sidebarBox">
@@ -218,9 +209,7 @@ function theme_sidebarBoxHeader($heading,$headingURL='') {
 				<div class="innerBox">
 
 ';
-} // theme_sidebarBoxHeader
-
-
+}
 function theme_sidebarBoxFooter() {
 	echo '
 
@@ -228,21 +217,16 @@ function theme_sidebarBoxFooter() {
 			<!-- .sidebarBox --></div>
 ';
 }
-
 function theme_leftSidebar($data) {
-
 	echo '
 
 		<!-- #content, #contentWrapper --></div></div>';
-	// Check If We Have Any Sidebars	
 	if(empty($data->sidebarList['left']))
 	{
 		return;
 	}
-
 	echo '
 		<div id="leftSidebar">';
-
 	if (count($data->sidebarList['left'])>0) {
 		foreach($data->sidebarList['left'] as $sidebar) {
 			if ($sidebar['fromFile']) {
@@ -251,48 +235,35 @@ function theme_leftSidebar($data) {
 				common_parseDynamicValues($data, $sidebar['titleURL']);
 				common_parseDynamicValues($data, $sidebar['parsedContent']);
 				theme_sidebarBoxHeader($sidebar['title'],$sidebar['titleURL']);
-				echo htmlspecialchars_decode($sidebar['parsedContent']);
+				echo html_entity_decode($sidebar['parsedContent'],ENT_QUOTES,'UTF-8');
 				theme_sidebarBoxFooter();
 			}
 		}
 	}
-
 	echo '
 		<!-- .leftSidebar --></div>';
-
-} // theme_leftSidebar
-
-function theme_rightSidebar($data) {
-
-	// Check If We Have Any Sidebars	
+}
+function theme_rightSidebar($data) {	
 	if(empty($data->sidebarList['right'])) {
 		return;
 	}
-
 	echo '<div id="rightSidebar">';
-
 	if (count($data->sidebarList)>0) {
 		foreach($data->sidebarList['right'] as $sidebar) {
-			if ($sidebar['fromFile']) {
+			if ($sidebar['fromFile']){
 				require_once('modules/sidebars/'.$sidebar['name'].'.sidebar.php');
 			} else {
 				common_parseDynamicValues($data, $sidebar['titleURL']);
 				common_parseDynamicValues($data, $sidebar['parsedContent']);
 				theme_sidebarBoxHeader($sidebar['title'],$sidebar['titleURL']);
-				echo htmlspecialchars_decode($sidebar['parsedContent']);
+				echo html_entity_decode($sidebar['parsedContent'],ENT_QUOTES,'UTF-8');
 				theme_sidebarBoxFooter();
 			}
 		}
 	}
-
 	echo '
 		<!-- .rightSidebar --></div>';
-
 }
-
-
-
-
 function theme_footer($data) {
 	common_parseDynamicValues($data,$data->settings['footerContent']);
 	echo '
@@ -301,7 +272,7 @@ function theme_footer($data) {
 
 	<div id="footer">
 
-',htmlspecialchars_decode($data->settings['parsedFooterContent']),'
+',html_entity_decode($data->settings['parsedFooterContent'],ENT_QUOTES,'UTF-8'),'
 
 	<!-- #footer --></div>
 
@@ -309,11 +280,9 @@ function theme_footer($data) {
 
 </body></html>';
 
-} // theme_footer
-
+}
 function theme_pagination($count,$current,$showPerPage,$linkPrefix) {
 	if($showPerPage == 0){
-		//zero-error prevention
 		$showPerPage = 5;
 	}
 	echo '
@@ -322,42 +291,33 @@ function theme_pagination($count,$current,$showPerPage,$linkPrefix) {
 		$pages = intval(ceil($count / $showPerPage));
 		$lastPage = $pages;
 		$currentPage = ($current == 0) ? 1 : $current;
-		
-		if($pages > 1)
-		{
-			if($currentPage > 1)
-			{
+		if($pages > 1){
+			if($currentPage > 1){
 				echo '
 					<li><a href="',$linkPrefix,'1">First</a></li>
 					<li><a href="',$linkPrefix,$currentPage-1,'">&lt;</a></li>';
 			}
 		}
 		$counter = 0;
-		
-		while ($counter < $lastPage)
-		{
+		while ($counter < $lastPage){
 			$counter++;	
 			$noAnchor = ($counter == $currentPage);
 			
 			echo '<li>';
-			if($noAnchor)
-			{
+			if($noAnchor){
 				echo '<span>',$counter,'</span>';
-			} else {
+			}else{
 				echo '<a href="',$linkPrefix,$counter,'">',$counter,'</a>';
 			}
 		}
-		
-		if ($lastPage > $currentPage && $lastPage > 1) {
+		if ($lastPage > $currentPage && $lastPage > 1){
 			echo '
 				<li><a href="',$linkPrefix,($currentPage+1),'">&gt;</a></li>
 				<li><a href="',$linkPrefix,$lastPage,'">Last</a></li>';
 		}
-
 	echo '
 </ul>';
 }
-
 function theme_accountSettings($data) {
 	if (!empty($data->output['savedOkMessage'])) {
 	echo '
@@ -366,4 +326,3 @@ function theme_accountSettings($data) {
 		theme_buildForm($data->output['userForm']);
 	}
 }
-?>
